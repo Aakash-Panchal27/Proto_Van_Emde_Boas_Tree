@@ -25,6 +25,11 @@ public:
     return x % root( universe_size );
   }
 
+  int generate_index(int cluster, int position)
+  {
+    return cluster * root(universe_size) + position;
+  }
+
   Van_Emde_Boas(int size)
   {
     universe_size = size;
@@ -99,6 +104,37 @@ void insert(Van_Emde_Boas* &helper, int key)
   }
 }
 
+int minimum(Van_Emde_Boas* helper)
+{
+  if(helper->universe_size == 2)
+  {
+    if(helper->clusters[0])
+    {
+      return 0;
+    }
+    else if(helper->clusters[1])
+    {
+      return 1;
+    }
+    return -1;
+  }
+  else
+  {
+      int minimum_cluster = minimum(helper->summary);
+      int offset;
+      if(minimum_cluster == -1)
+      {
+        return -1;
+      }
+      else
+      {
+        offset = minimum( helper->clusters[ minimum_cluster ] );
+        return helper->generate_index( minimum_cluster, offset );
+      }
+  }
+
+}
+
 
 
 int main()
@@ -110,4 +146,6 @@ int main()
   insert(hello, 3);
 
   cout << isMember(hello, 3);
+
+  cout<<minimum(hello);
 }
