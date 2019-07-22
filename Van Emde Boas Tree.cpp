@@ -137,15 +137,51 @@ int minimum(Van_Emde_Boas* helper)
 
 
 
+int maximum(Van_Emde_Boas* helper)
+{
+  if(helper->universe_size == 2)
+  {
+    if(helper->clusters[1])
+    {
+      return 1;
+    }
+    else if(helper->clusters[0])
+    {
+      return 0;
+    }
+    return -1;
+  }
+  else
+  {
+      int maximum_cluster = maximum(helper->summary);
+      int offset;
+      if(maximum_cluster == -1)
+      {
+        return -1;
+      }
+      else
+      {
+        offset = maximum( helper->clusters[ maximum_cluster ] );
+        return helper->generate_index( maximum_cluster, offset );
+      }
+  }
+
+}
+
+
+
+
 int main()
 {
   Van_Emde_Boas*hello = new Van_Emde_Boas(4);
 
   cout << isMember(hello, 3);
 
+  insert(hello, 2);
   insert(hello, 3);
 
   cout << isMember(hello, 3);
 
-  cout<<minimum(hello);
+  cout<<"\nminimum: "<<minimum(hello);
+  cout<<"\nmaximum: "<<maximum(hello);
 }
