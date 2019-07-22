@@ -169,6 +169,60 @@ int maximum(Van_Emde_Boas* helper)
 }
 
 
+int successor(Van_Emde_Boas* helper, int key)
+{
+  if(helper->universe_size==2)
+  {
+    if(key==0 && helper->clusters[1])
+      return 1;
+    else return -1;
+  }
+  else
+  {
+    int offset = successor(helper->clusters[ helper->high(key) ], helper->low(key) );
+    if(offset != -1)
+      return helper->generate_index(helper->high(key), offset);
+    else
+    {
+      int successor_cluster = successor(helper->summary, helper->high(key));
+      if(successor_cluster==-1)
+        return -1;
+      else
+      {
+        offset = minimum(helper->clusters[successor_cluster]);
+        return helper->generate_index(successor_cluster, offset);
+      }
+    }
+  }
+}
+
+int predecessor(Van_Emde_Boas* helper, int key)
+{
+  if(helper->universe_size==2)
+  {
+    if(key==1 && helper->clusters[0])
+      return 0;
+    else return -1;
+  }
+  else
+  {
+    int offset = predecessor(helper->clusters[ helper->high(key) ], helper->low(key) );
+    if(offset != -1)
+      return helper->generate_index(helper->high(key), offset);
+    else
+    {
+      int predecessor_cluster = predecessor(helper->summary, helper->high(key));
+      if(predecessor_cluster==-1)
+        return -1;
+      else
+      {
+        offset = maximum(helper->clusters[predecessor_cluster]);
+        return helper->generate_index(predecessor_cluster, offset);
+      }
+    }
+  }
+}
+
 
 
 int main()
@@ -184,4 +238,7 @@ int main()
 
   cout<<"\nminimum: "<<minimum(hello);
   cout<<"\nmaximum: "<<maximum(hello);
+
+  cout<<predecessor(hello,3);
+  cout<<successor(hello,2);
 }
