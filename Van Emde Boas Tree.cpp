@@ -55,7 +55,7 @@ public:
 
 };
 
-bool isMember(Van_Emde_Boas* &helper, int key)
+bool isMember(Van_Emde_Boas* helper, int key)
 {
 
   if(key >= helper->universe_size)
@@ -69,8 +69,25 @@ bool isMember(Van_Emde_Boas* &helper, int key)
   return isMember( helper->clusters[ helper->high(key) ], helper->low(key) );
 }
 
+void insert(Van_Emde_Boas* &helper, int key)
+{
+  if(helper->universe_size == 2)
+  {
+    helper->clusters[key] = new Van_Emde_Boas(1);
+  }
+  else
+  {
+      insert( helper->clusters[ helper->high(key) ], helper->low(key) );
+      insert(helper->summary, helper->high(key) );
+  }
+}
+
 int main()
 {
   Van_Emde_Boas*hello = new Van_Emde_Boas(4);
   cout << isMember(hello, 4);
+
+  insert(hello, 3);
+
+  cout << isMember(hello, 3);
 }
