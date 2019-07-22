@@ -4,6 +4,8 @@ using namespace std;
 
 class Van_Emde_Boas
 {
+public:
+
   int universe_size;
   Van_Emde_Boas* summary;
   vector<Van_Emde_Boas*> clusters;
@@ -23,7 +25,6 @@ class Van_Emde_Boas
     return x % root( universe_size );
   }
 
-public:
   Van_Emde_Boas(int size)
   {
     universe_size = size;
@@ -51,9 +52,25 @@ public:
       }
     }
   }
+
 };
+
+bool isMember(Van_Emde_Boas* &helper, int key)
+{
+
+  if(key >= helper->universe_size)
+    return false;
+
+  if(helper->universe_size == 2)
+  {
+    return helper->clusters[key];
+  }
+  else
+  return isMember( helper->clusters[ helper->high(key) ], helper->low(key) );
+}
 
 int main()
 {
-  Van_Emde_Boas akp(4);
+  Van_Emde_Boas*hello = new Van_Emde_Boas(4);
+  cout << isMember(hello, 4);
 }
